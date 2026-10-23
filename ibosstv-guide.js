@@ -1,11 +1,89 @@
-/* iBossTV LIVE Channel Guide | Central master | v1.0 */
+
+/* iBossTV LIVE Channel Guide | Central master | v1.1 */
 (function () {
   'use strict';
-  const CHANNELS = [{"name":"Spotlight","description":"Featured creators and stories","path":"/pages/livetv-spotlight","image":"assets/spotlight.png"},{"name":"Originals","description":"Original productions","path":"/pages/livetv-originals","image":"assets/originals.png"},{"name":"Latino","description":"Latino voices and culture","path":"/pages/livetv-latino","image":"assets/latino.png"},{"name":"Kids","description":"Family-friendly entertainment","path":"/pages/livetv-kids","image":"assets/kids.png"},{"name":"Faith & Purpose","description":"Faith, inspiration and purpose","path":"/pages/livetv-faith-purpose","image":"assets/faith-purpose.png"},{"name":"Music & Culture","description":"Music and performances","path":"/pages/livetv-music-culture","image":"assets/music-culture.png"},{"name":"Creator Central","description":"Content for creative entrepreneurs","path":"/pages/livetv-creator-central","image":"assets/creator-central.png"},{"name":"Previews","description":"Trailers and what’s coming","path":"/pages/livetv-previews","image":"assets/previews.png"},{"name":"Inside the Brand – Florida","description":"Stories behind Florida businesses and communities","path":"/pages/livetv-inside-the-brand-florida","image":"assets/inside-the-brand-florida.png"},{"name":"Wellness Network","description":"Health and wellness","path":"/pages/livetv-wellness-network","image":"assets/wellness-network.png"}];
+
+  const CHANNELS = [
+    {
+      name: "Spotlight",
+      description: "Featured creators and stories",
+      path: "/pages/livetv-spotlight",
+      image: "assets/spotlight.png"
+    },
+    {
+      name: "Originals",
+      description: "Original productions",
+      path: "/pages/livetv-originals",
+      image: "assets/originals.png"
+    },
+    {
+      name: "Latino",
+      description: "Latino voices and culture",
+      path: "/pages/livetv-latino",
+      image: "assets/latino.png"
+    },
+    {
+      name: "Caribbean",
+      description: "Caribbean culture, music and entertainment",
+      path: "/pages/livetv-caribbean",
+      image: "assets/caribbean.png"
+    },
+    {
+      name: "Haiti",
+      description: "Haitian culture, heritage and entertainment",
+      path: "/pages/livetv-haiti",
+      image: "assets/haiti.png"
+    },
+    {
+      name: "Kids",
+      description: "Family-friendly entertainment",
+      path: "/pages/livetv-kids",
+      image: "assets/kids.png"
+    },
+    {
+      name: "Faith & Purpose",
+      description: "Faith, inspiration and purpose",
+      path: "/pages/livetv-faith-purpose",
+      image: "assets/faith-purpose.png"
+    },
+    {
+      name: "Music & Culture",
+      description: "Music and performances",
+      path: "/pages/livetv-music-culture",
+      image: "assets/music-culture.png"
+    },
+    {
+      name: "Creator Central",
+      description: "Content for creative entrepreneurs",
+      path: "/pages/livetv-creator-central",
+      image: "assets/creator-central.png"
+    },
+    {
+      name: "Previews",
+      description: "Trailers and what's coming",
+      path: "/pages/livetv-previews",
+      image: "assets/previews.png"
+    },
+    {
+      name: "Inside the Brand – Florida",
+      description: "Stories behind Florida businesses and communities",
+      path: "/pages/livetv-inside-the-brand-florida",
+      image: "assets/inside-the-brand-florida.png"
+    },
+    {
+      name: "Wellness Network",
+      description: "Health and wellness",
+      path: "/pages/livetv-wellness-network",
+      image: "assets/wellness-network.png"
+    }
+  ];
+
   const currentScript = document.currentScript;
+
   const assetBase = currentScript && currentScript.src
     ? new URL('.', currentScript.src).href
     : window.location.href;
+
   const css = `
     .ibg-guide{--ibg-teal:#00c2cb;--ibg-gold:#d4af37;box-sizing:border-box;width:100%;background:#11181d;color:#fff;border:1px solid #27363e;border-radius:16px;padding:22px;font-family:Arial,Helvetica,sans-serif}
     .ibg-guide *{box-sizing:border-box}
@@ -27,48 +105,111 @@
     @media(max-width:950px){.ibg-list.ibg-expanded{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media(max-width:600px){.ibg-guide{padding:14px}.ibg-head{align-items:flex-start}.ibg-title{font-size:19px}.ibg-toggle{padding:8px;font-size:11px}.ibg-card{flex-basis:162px;padding:11px}.ibg-art{max-width:116px}.ibg-list.ibg-expanded{grid-template-columns:repeat(2,minmax(0,1fr))}}
   `;
+
   function make(tag, cls, text) {
     const el = document.createElement(tag);
     if (cls) el.className = cls;
     if (text != null) el.textContent = text;
     return el;
   }
+
   function mount(root) {
     if (root.dataset.ibgMounted === 'true') return;
+
     root.dataset.ibgMounted = 'true';
-    const section=make('section','ibg-guide');
-    const header=make('div','ibg-head');
-    const left=make('div');
-    left.append(make('div','ibg-eyebrow','● LIVE TV'),make('h2','ibg-title','iBossTV Channel Guide'),make('p','ibg-sub','Explore the network. Discover something worth watching.'));
-    const toggle=make('button','ibg-toggle','View All Channels ↓');
-    toggle.type='button'; toggle.setAttribute('aria-expanded','false');
-    const list=make('nav','ibg-list'); list.setAttribute('aria-label','iBossTV LIVE channels');
-    const currentPath=window.location.pathname.replace(/\/+$/,'')||'/';
-    CHANNELS.forEach(channel=>{
-      const active=currentPath===channel.path;
-      const card=make('a','ibg-card'+(active?' ibg-active':''));
-      card.href=channel.path;
-      if(active) card.setAttribute('aria-current','page');
-      const img=make('img','ibg-art');
-      img.src=new URL(channel.image,assetBase).href;
-      img.alt=channel.name+' channel logo'; img.loading='lazy';
-      card.append(img,make('div','ibg-name',channel.name),make('div','ibg-desc',channel.description));
-      if(active) card.append(make('div','ibg-current','NOW WATCHING'));
+
+    const section = make('section', 'ibg-guide');
+    const header = make('div', 'ibg-head');
+    const left = make('div');
+
+    left.append(
+      make('div', 'ibg-eyebrow', '● LIVE TV'),
+      make('h2', 'ibg-title', 'iBossTV Channel Guide'),
+      make('p', 'ibg-sub', 'Explore the network. Discover something worth watching.')
+    );
+
+    const toggle = make('button', 'ibg-toggle', 'View All Channels ↓');
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', 'false');
+
+    const list = make('nav', 'ibg-list');
+    list.setAttribute('aria-label', 'iBossTV LIVE channels');
+
+    const currentPath =
+      window.location.pathname.replace(/\/+$/, '') || '/';
+
+    CHANNELS.forEach(channel => {
+      const active = currentPath === channel.path;
+
+      const card = make(
+        'a',
+        'ibg-card' + (active ? ' ibg-active' : '')
+      );
+
+      card.href = channel.path;
+
+      if (active) {
+        card.setAttribute('aria-current', 'page');
+      }
+
+      const img = make('img', 'ibg-art');
+      img.src = new URL(channel.image, assetBase).href;
+      img.alt = channel.name + ' channel logo';
+      img.loading = 'lazy';
+
+      card.append(
+        img,
+        make('div', 'ibg-name', channel.name),
+        make('div', 'ibg-desc', channel.description)
+      );
+
+      if (active) {
+        card.append(
+          make('div', 'ibg-current', 'NOW WATCHING')
+        );
+      }
+
       list.append(card);
     });
-    toggle.addEventListener('click',()=>{
-      const expanded=list.classList.toggle('ibg-expanded');
-      toggle.textContent=expanded?'Show Less ↑':'View All Channels ↓';
-      toggle.setAttribute('aria-expanded',String(expanded));
+
+    toggle.addEventListener('click', () => {
+      const expanded = list.classList.toggle('ibg-expanded');
+
+      toggle.textContent = expanded
+        ? 'Show Less ↑'
+        : 'View All Channels ↓';
+
+      toggle.setAttribute(
+        'aria-expanded',
+        String(expanded)
+      );
     });
-    header.append(left,toggle);section.append(header,list);root.append(section);
+
+    header.append(left, toggle);
+    section.append(header, list);
+    root.append(section);
   }
-  function init(){
-    if(!document.getElementById('ibg-master-style')){
-      const style=make('style');style.id='ibg-master-style';style.textContent=css;document.head.append(style);
+
+  function init() {
+    if (!document.getElementById('ibg-master-style')) {
+      const style = make('style');
+      style.id = 'ibg-master-style';
+      style.textContent = css;
+      document.head.append(style);
     }
-    document.querySelectorAll('[data-ibosstv-guide]').forEach(mount);
+
+    document
+      .querySelectorAll('[data-ibosstv-guide]')
+      .forEach(mount);
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
-  else init();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      init,
+      { once: true }
+    );
+  } else {
+    init();
+  }
 })();
