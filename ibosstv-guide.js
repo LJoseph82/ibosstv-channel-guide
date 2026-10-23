@@ -1,5 +1,5 @@
 
-/* iBossTV LIVE Channel Guide | Central master | v1.1 */
+/* iBossTV LIVE Channel Guide | Central Master | v1.2 */
 (function () {
   'use strict';
 
@@ -78,12 +78,14 @@
     }
   ];
 
+  // Locate image assets relative to this script
   const currentScript = document.currentScript;
 
   const assetBase = currentScript && currentScript.src
     ? new URL('.', currentScript.src).href
     : window.location.href;
 
+  // Existing approved visual design
   const css = `
     .ibg-guide{--ibg-teal:#00c2cb;--ibg-gold:#d4af37;box-sizing:border-box;width:100%;background:#11181d;color:#fff;border:1px solid #27363e;border-radius:16px;padding:22px;font-family:Arial,Helvetica,sans-serif}
     .ibg-guide *{box-sizing:border-box}
@@ -108,8 +110,10 @@
 
   function make(tag, cls, text) {
     const el = document.createElement(tag);
+
     if (cls) el.className = cls;
     if (text != null) el.textContent = text;
+
     return el;
   }
 
@@ -125,20 +129,41 @@
     left.append(
       make('div', 'ibg-eyebrow', '● LIVE TV'),
       make('h2', 'ibg-title', 'iBossTV Channel Guide'),
-      make('p', 'ibg-sub', 'Explore the network. Discover something worth watching.')
+      make(
+        'p',
+        'ibg-sub',
+        'Explore the network. Discover something worth watching.'
+      )
     );
 
-    const toggle = make('button', 'ibg-toggle', 'View All Channels ↓');
+    const toggle = make(
+      'button',
+      'ibg-toggle',
+      'View All Channels ↓'
+    );
+
     toggle.type = 'button';
     toggle.setAttribute('aria-expanded', 'false');
 
     const list = make('nav', 'ibg-list');
-    list.setAttribute('aria-label', 'iBossTV LIVE channels');
+    list.setAttribute(
+      'aria-label',
+      'iBossTV LIVE channels'
+    );
 
+    // Detect which Uscreen channel page is open
     const currentPath =
       window.location.pathname.replace(/\/+$/, '') || '/';
 
-    CHANNELS.forEach(channel => {
+    // NEW: Automatically place current channel first
+    const sortedChannels = [...CHANNELS].sort((a, b) => {
+      const aActive = a.path === currentPath;
+      const bActive = b.path === currentPath;
+
+      return Number(bActive) - Number(aActive);
+    });
+
+    sortedChannels.forEach(channel => {
       const active = currentPath === channel.path;
 
       const card = make(
@@ -153,6 +178,7 @@
       }
 
       const img = make('img', 'ibg-art');
+
       img.src = new URL(channel.image, assetBase).href;
       img.alt = channel.name + ' channel logo';
       img.loading = 'lazy';
@@ -173,7 +199,8 @@
     });
 
     toggle.addEventListener('click', () => {
-      const expanded = list.classList.toggle('ibg-expanded');
+      const expanded =
+        list.classList.toggle('ibg-expanded');
 
       toggle.textContent = expanded
         ? 'Show Less ↑'
@@ -193,8 +220,10 @@
   function init() {
     if (!document.getElementById('ibg-master-style')) {
       const style = make('style');
+
       style.id = 'ibg-master-style';
       style.textContent = css;
+
       document.head.append(style);
     }
 
