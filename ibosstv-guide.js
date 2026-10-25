@@ -75,7 +75,14 @@
       description: "Health and wellness",
       path: "/pages/livetv-wellness-network",
       image: "assets/wellness-network.png"
+    },
+    {
+      name: "LOLounge",
+      description: "Independent comedians, stand-up specials, sketches and nonstop laughter",
+      path: "/pages/livetv-lolounge",
+      image: "assets/lolounge.png"
     }
+    
   ];
 
   // Locate image assets relative to this script
